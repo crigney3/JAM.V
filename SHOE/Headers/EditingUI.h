@@ -53,6 +53,8 @@ public:
 	void SetEntityUIIndex(int NewEntityUIIndex);
 	void SetSkyUIIndex(int NewSkyUIIndex);
 	void SetObjWindowEnabled(bool enabled);
+	void EditingUI::SetMaterialUIIndex(int newIndex);
+	void EditingUI::SetMaterialWindowEnabled(bool enabled);
 
 	// Getters
 	bool* GetObjWindowEnabled();
@@ -63,12 +65,14 @@ public:
 	bool* GetMaterialWindowEnabled();
 	bool* GetCollidersWindowEnabled();
 	bool* GetRtvWindowEnabled();
+	bool* GetRenderWindowEnabled();
 
 	bool* GetStatsEnabled();
 	bool* GetMovingEnabled();
 
 	int GetEntityUIIndex();
 	int GetSkyUIIndex();
+	int GetMaterialUIIndex();
 
 private:
 	std::shared_ptr<Renderer> renderer;
@@ -84,11 +88,13 @@ private:
 	bool rtvWindowEnabled;
 	bool soundWindowEnabled;
 	bool collidersWindowEnabled;
+	bool renderWindowEnabled;
 
 	// Transfer these to static locals
 	// Then add helper functions for setting them?
 	int entityUIIndex;
 	int skyUIIndex;
+	int materialUIIndex;
 
 	//For selecting objects with a click
 	std::shared_ptr<GameEntity> GetClickedEntity();

@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)packages\directxtk_desktop_2017.2022.3.1.1\include\;$(SolutionDir)packages\directxtk_desktop_2017.2021.10.19.1\include\;$(IncludePath);$(SolutionDir)packages\FMOD\core\inc\;$(SolutionDir)packages\FMOD\studio\inc</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(WindowsSDK_LibraryPath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(IncludePath);$(SolutionDir)packages\FMOD\core\inc\;$(SolutionDir)packages\FMOD\studio\inc</IncludePath>
@@ -111,8 +111,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)packages\FMOD\core\lib\x64\;$(SolutionDir)packages\FMOD\studio\lib\x64\;$(SolutionDir)packages\BulletPhysics\include\bullet;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Mf.lib;Mfcore.lib;Mfplat.lib;mfplay.lib;mfuuid.lib;mfreadwrite.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)packages\FMOD\core\lib\x64\;$(SolutionDir)packages\FMOD\studio\lib\x64\;$(SolutionDir)packages\BulletPhysics\include\bullet;$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)packages\FMOD\core\lib\x64\*.dll" "$(OutDir)"</Command>
@@ -170,6 +170,7 @@
     <ClInclude Include="Headers\AssetManager.h" />
     <ClInclude Include="Headers\AudioEventPacket.h" />
     <ClInclude Include="Headers\AudioHandler.h" />
+    <ClInclude Include="Headers\AudioResponse.h" />
     <ClInclude Include="Headers\Camera.h" />
     <ClInclude Include="Headers\CollisionManager.h" />
     <ClInclude Include="Headers\ComponentManager.h" />
@@ -297,6 +298,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\PSRGBCompression.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shaders\PixelShaders\PSSkybox.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -387,6 +391,7 @@
     <ClCompile Include="Source\AssetManager.cpp" />
     <ClCompile Include="Source\AudioEventPacket.cpp" />
     <ClCompile Include="Source\AudioHandler.cpp" />
+    <ClCompile Include="Source\AudioResponse.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\ComponentPool.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
