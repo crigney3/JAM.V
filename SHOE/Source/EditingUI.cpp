@@ -22,6 +22,7 @@ EditingUI::EditingUI(std::shared_ptr<Renderer> renderer) {
 	skyWindowEnabled = false;
 	objHierarchyEnabled = true;
 	rtvWindowEnabled = false;
+	audioVizEnabled = false;
 
 	entityUIIndex = -1;
 	skyUIIndex = 0;
@@ -44,6 +45,7 @@ void EditingUI::ReInitializeEditingUI(std::shared_ptr<Renderer> renderer) {
 	skyWindowEnabled = false;
 	objHierarchyEnabled = true;
 	rtvWindowEnabled = false;
+	audioVizEnabled = false;
 
 	entityUIIndex = -1;
 	skyUIIndex = 0;
@@ -140,6 +142,7 @@ void EditingUI::DisplayMenu() {
 			ImGui::MenuItem("Texture", "", GetTextureWindowEnabled());
 			ImGui::MenuItem("Material", "", GetMaterialWindowEnabled());
 			ImGui::MenuItem("Colliders", "", GetCollidersWindowEnabled());
+			ImGui::MenuItem("Stems", "", GetAudioVizEnabled());
 
 			ImGui::EndMenu();
 		}
@@ -983,10 +986,125 @@ void EditingUI::GenerateEditingUI() {
 		ImGui::End();
 	}
 
-	// TODO: Add Material Edit menu
+	if (*(GetAudioVizEnabled()))
+	{
+		ImGui::Begin("Stem Visualizer");
+
+		static float progress = 0.0f;
+		static bool animate = false;
+		static float songLengthInSeconds = 120; // TODO: Use actual song length
+		static float elapsedTime = 0.0; // in secods
+		//ImGui::Checkbox("Animate", &animate);
+
+		if (ImGui::Button("Restart Track")) {
+			animate = false;
+			progress = 0.0f;
+			elapsedTime = 0.0;
+		}
+		
+		if (animate)
+		{
+			progress += ImGui::GetIO().DeltaTime / songLengthInSeconds;
+			elapsedTime += ImGui::GetIO().DeltaTime;
+			if (progress >= +1.1f) { progress = +1.1f;}
+			if (progress <= -0.1f) { progress = -0.1f;}
+		}
+
+		// Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
+		// or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
+		ImGui::Text("  Drums ");
+		ImGui::SameLine();
+		if (ImGui::Button("Mute")) {
+			// TODO: Implement Mute
+		}
+		ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
+		ImGui::SameLine();
+		if (ImGui::Button("Link Drums to Obj   ")) {
+			// TODO: Implement Link
+		}
+
+		ImGui::Text("  Bass  ");
+		ImGui::SameLine();
+		if (ImGui::Button("Mute")) {
+			// TODO: Implement Mute
+		}
+		ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
+		ImGui::SameLine();
+		if (ImGui::Button("Link Bass to Obj    ")) {
+			// TODO: Implement Link
+		}
+
+		ImGui::Text(" Vocals ");
+		ImGui::SameLine();
+		if (ImGui::Button("Mute")) {
+			// TODO: Implement Mute
+		}
+		ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
+		ImGui::SameLine();
+		if (ImGui::Button("Link Vocals to Obj  ")) {
+			// TODO: Implement Link
+		}
+
+		ImGui::Text("Keyboard");
+		ImGui::SameLine();
+		if (ImGui::Button("Mute")) {
+			// TODO: Implement Mute
+		}
+		ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
+		ImGui::SameLine();
+		if (ImGui::Button("Link Keyboard to Obj")) {
+			// TODO: Implement Link
+		}
+
+		std::string infoStr = "";
+
+		int elapsedMinutes = floor(elapsedTime / 60);
+		if (elapsedMinutes < 10)
+		{
+			infoStr += "0" + std::to_string(elapsedMinutes);
+		}
+		else
+		{
+			infoStr += std::to_string(elapsedMinutes);
+		}
+
+		int elapsedSeconds = floor(elapsedTime);
+		int elapsedMiliseconds = floor((elapsedTime - elapsedSeconds) * 100);
+		elapsedSeconds %= 60; // c++ gets mad if done on same line
+		if (elapsedSeconds < 10)
+		{
+			infoStr += ":0" + std::to_string(elapsedSeconds) + "." + std::to_string(elapsedMiliseconds);
+		}
+		else
+		{
+			infoStr += ":" + std::to_string(elapsedSeconds) + "." + std::to_string(elapsedMiliseconds);
+		}
+
+		if (ImGui::Button("Play")) {
+			animate = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Pause")) {
+			animate = false;
+		}
+		ImGui::SameLine();
+
+		std::string node = "Elapsed Time: " + infoStr;
+		ImGui::Text(node.c_str());
+
+		ImGui::End();
+	}
 }
 
 // Getters
+bool* EditingUI::GetAudioVizEnabled() {
+	return &audioVizEnabled;
+}
+
 bool* EditingUI::GetObjWindowEnabled() {
 	return &objWindowEnabled;
 }
